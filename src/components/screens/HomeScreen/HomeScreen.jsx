@@ -9,19 +9,31 @@ import { HomeScreenStyles } from "./styles";
 // Icons
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { Button } from "@rneui/base";
+import CardMovement from "../../common/CardMovement/CardMovement";
 
-// ? Min 37:10 del 2do Video !!
-
-export function HomeScreen() {
+export function HomeScreen({ navigation }) {
   const { top } = useSafeAreaInsets();
+
   const [showMoney, setShowMoney] = useState(true);
-  let num = 1000;
+  const [movements, setMovements] = useState([
+    {
+      id: 1,
+      amount: 10000,
+      date: "12/10/2023",
+      name: "Salary",
+      userAvatar: "https://randomuser.me/api/portraits/men/36.jpg",
+    },
+  ]);
+
+  let num = 120000;
   return (
     <SafeAreaView style={{ ...HomeScreenStyles.containerHome, top: top }}>
       <ScrollView
         style={HomeScreenStyles.scrollViewContainer}
         showsVerticalScrollIndicator={false}
       >
+        {/* SALARY */}
         <View style={HomeScreenStyles.containerAmount}>
           <Text style={HomeScreenStyles.amountTitle}>Salary</Text>
           <View style={HomeScreenStyles.cardMoney}>
@@ -55,10 +67,12 @@ export function HomeScreen() {
             )}
           </View>
         </View>
+        {/* MINI CARDS */}
         <View style={HomeScreenStyles.containerMiniCard}>
           <MiniCard
             icon={<FontAwesome5 name="newspaper" size={24} color="#00ffa8" />}
             cardText={"CVU"}
+            navigation={() => navigation.navigate("Cvu")}
           />
           <MiniCard
             icon={<FontAwesome5 name="history" size={24} color="#00ffa8" />}
@@ -68,6 +82,37 @@ export function HomeScreen() {
             icon={<FontAwesome5 name="credit-card" size={24} color="#00ffa8" />}
             cardText={"Cards"}
           />
+        </View>
+        {/* MOVEMENTS SUBTITLE */}
+        <View style={HomeScreenStyles.containerMovementsSubtitle}>
+          <Text style={{ fontSize: 16, color: "white" }}>Recent Movements</Text>
+          <Button
+            title={"New Movement"}
+            type="outline"
+            containerStyle={{
+              width: 170,
+              backgroundColor: "#00ffa8",
+              borderRadius: 5,
+            }}
+            titleStyle={{
+              color: "black",
+            }}
+            buttonStyle={{
+              borderWidth: 1,
+              borderColor: "#00ffa8",
+            }}
+          ></Button>
+        </View>
+
+        {/* MOVEMENTS LIST */}
+        <View style={HomeScreenStyles.containerMovementsList}>
+          {movements.map((movement) => (
+            <CardMovement
+              key={movement.id}
+              movement={movement}
+              showMoney={showMoney}
+            />
+          ))}
         </View>
       </ScrollView>
     </SafeAreaView>

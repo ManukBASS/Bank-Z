@@ -1,14 +1,18 @@
 import React from "react";
 // React Native
 import { View, Text, TouchableOpacity } from "react-native";
-import { Icon } from "@rneui/themed";
+
 // Styles
 import { MiniCardStyles } from "./style";
 
-export default function MiniCard({ icon, cardText }) {
+export default function MiniCard({ icon, cardText, navigation }) {
   return (
     <View>
-      <TouchableOpacity style={MiniCardStyles.miniCard}>
+      <TouchableOpacity
+        style={MiniCardStyles.miniCard}
+        onPress={navigation}
+        activeOpacity={0.4}
+      >
         {icon}
         <Text style={MiniCardStyles.cardText}>{cardText}</Text>
       </TouchableOpacity>

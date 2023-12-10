@@ -44,10 +44,11 @@ export function LoginScreen({ navigation }) {
             containerStyle={{
               backgroundColor: "#00ffa8",
               width: 200,
+              borderRadius: 5,
             }}
             buttonStyle={{
-              borderBlockColor: "#00ffa8",
-              border: 1,
+              borderWidth: 1,
+              borderColor: "#00ffa8",
             }}
             titleStyle={{
               color: "black",

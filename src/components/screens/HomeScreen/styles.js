@@ -35,5 +35,17 @@ export const HomeScreenStyles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         paddingVertical: 10
+    },
+    containerMovementsSubtitle: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginVertical: 20
+    },
+    containerMovementsList: {
+        minHeight: 300,
+        backgroundColor: "#282929",
+        borderRadius: 5,
+        marginBottom: 50
     }
 })
