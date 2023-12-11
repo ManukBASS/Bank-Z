@@ -3,7 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 // Components
 import { LoginScreen } from "../components/screens/LoginScreen/LoginScreen";
 import { HomeScreen } from "../components/screens/HomeScreen/HomeScreen";
-import CvuScreen from "../components/screens/CVUScreen/CvuScreen";
+import { CvuScreen } from "../components/screens/CvuScreen/CvuScreen";
 
 const Stack = createStackNavigator();
 

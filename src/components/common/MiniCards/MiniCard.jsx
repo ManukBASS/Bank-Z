@@ -5,7 +5,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 // Styles
 import { MiniCardStyles } from "./style";
 
-export default function MiniCard({ icon, cardText, navigation }) {
+export function MiniCard({ icon, cardText, navigation }) {
   return (
     <View>
       <TouchableOpacity

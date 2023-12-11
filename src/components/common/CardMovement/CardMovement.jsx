@@ -6,7 +6,7 @@ import { Avatar } from "@rneui/base";
 // Styles
 import { CardMovementStyles } from "./styles";
 
-export default function CardMovement({ movement, showMoney }) {
+export function CardMovement({ movement, showMoney }) {
   return (
     <TouchableOpacity style={CardMovementStyles.cardMovement}>
       <View style={CardMovementStyles.movementContainer}>

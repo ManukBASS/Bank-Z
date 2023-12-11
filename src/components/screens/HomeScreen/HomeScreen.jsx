@@ -3,14 +3,15 @@ import React, { useState } from "react";
 import { View, Text, SafeAreaView, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 // Components
-import MiniCard from "../../common/MiniCards/MiniCard";
+import { MiniCard } from "../../common/MiniCards/MiniCard";
+import { CardMovement } from "../../common/CardMovement/CardMovement";
+import { CardMovementSkeleton } from "../../common/MovementSkeleton/CardMovementSkeleton";
 // Styles
 import { HomeScreenStyles } from "./styles";
 // Icons
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Button } from "@rneui/base";
-import CardMovement from "../../common/CardMovement/CardMovement";
 
 export function HomeScreen({ navigation }) {
   const { top } = useSafeAreaInsets();
@@ -23,6 +24,13 @@ export function HomeScreen({ navigation }) {
       date: "12/10/2023",
       name: "Salary",
       userAvatar: "https://randomuser.me/api/portraits/men/36.jpg",
+    },
+    {
+      id: 2,
+      amount: -5000,
+      date: "12/11/2023",
+      name: "Transaction",
+      userAvatar: "https://randomuser.me/api/portraits/men/34.jpg",
     },
   ]);
 
@@ -106,6 +114,14 @@ export function HomeScreen({ navigation }) {
 
         {/* MOVEMENTS LIST */}
         <View style={HomeScreenStyles.containerMovementsList}>
+          {movements.length === 0 && (
+            <>
+              <CardMovementSkeleton />
+              <CardMovementSkeleton />
+              <CardMovementSkeleton />
+              <CardMovementSkeleton />
+            </>
+          )}
           {movements.map((movement) => (
             <CardMovement
               key={movement.id}
