@@ -1,7 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // React Native
 import { View, Text, SafeAreaView, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+// RN Elements
+import { Button } from "@rneui/base";
+// Firebase
+import { db } from "../../../firebaseConfig";
+import { getDocs, collection } from "firebase/firestore";
 // Components
 import { MiniCard } from "../../common/MiniCards/MiniCard";
 import { CardMovement } from "../../common/CardMovement/CardMovement";
@@ -11,30 +16,29 @@ import { HomeScreenStyles } from "./styles";
 // Icons
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { Button } from "@rneui/base";
 
 export function HomeScreen({ navigation }) {
   const { top } = useSafeAreaInsets();
 
   const [showMoney, setShowMoney] = useState(true);
-  const [movements, setMovements] = useState([
-    {
-      id: 1,
-      amount: 10000,
-      date: "12/10/2023",
-      name: "Salary",
-      userAvatar: "https://randomuser.me/api/portraits/men/36.jpg",
-    },
-    {
-      id: 2,
-      amount: -5000,
-      date: "12/11/2023",
-      name: "Transaction",
-      userAvatar: "https://randomuser.me/api/portraits/men/34.jpg",
-    },
-  ]);
+  const [movements, setMovements] = useState([]);
 
-  let num = 120000;
+  let totalAmount = movements.reduce((acc, movement) => {
+    return acc + movement.amount;
+  }, 0);
+
+  useEffect(() => {
+    let movementsCollection = collection(db, "movements");
+    getDocs(movementsCollection)
+      .then((res) => {
+        let arrayMovements = res.docs.map((movement) => {
+          return { id: movement.id, ...movement.data() };
+        });
+        setMovements(arrayMovements);
+      })
+      .catch((error) => console.log(error));
+  }, []);
+
   return (
     <SafeAreaView style={{ ...HomeScreenStyles.containerHome, top: top }}>
       <ScrollView
@@ -48,7 +52,7 @@ export function HomeScreen({ navigation }) {
             <FontAwesome5 name="money-bill-alt" size={40} color="#00ffa8" />
             {showMoney ? (
               <Text style={HomeScreenStyles.amountNumber}>
-                {num.toLocaleString("en-US", {
+                {totalAmount.toLocaleString("en-US", {
                   style: "currency",
                   currency: "USD",
                 })}
@@ -97,6 +101,7 @@ export function HomeScreen({ navigation }) {
           <Button
             title={"New Movement"}
             type="outline"
+            onPress={() => navigation.navigate("NewMovement")}
             containerStyle={{
               width: 170,
               backgroundColor: "#00ffa8",
@@ -109,7 +114,7 @@ export function HomeScreen({ navigation }) {
               borderWidth: 1,
               borderColor: "#00ffa8",
             }}
-          ></Button>
+          />
         </View>
 
         {/* MOVEMENTS LIST */}
