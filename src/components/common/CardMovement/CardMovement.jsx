@@ -6,7 +6,7 @@ import { Avatar } from "@rneui/base";
 // Styles
 import { CardMovementStyles } from "./styles";
 
-export function CardMovement({ movement, showMoney }) {
+export function CardMovement({ movement, showMoney, handleModal }) {
   const dateFormat = new Date(movement?.date?.seconds * 1000);
   const formatedDate = `${dateFormat.getDate()}/${(dateFormat.getMonth() + 1)
     .toString()
@@ -15,7 +15,10 @@ export function CardMovement({ movement, showMoney }) {
     .padStart(2, "0")}:${dateFormat.getMinutes().toString().padStart(2, "0")}`;
 
   return (
-    <TouchableOpacity style={CardMovementStyles.cardMovement}>
+    <TouchableOpacity
+      style={CardMovementStyles.cardMovement}
+      onPress={() => handleModal(movement)}
+    >
       <View style={CardMovementStyles.movementContainer}>
         <Avatar
           size={32}

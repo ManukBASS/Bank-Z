@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 // React Native
-import { View, Text, SafeAreaView, ScrollView } from "react-native";
+import { View, Text, SafeAreaView, ScrollView, Modal } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 // RN Elements
 import { Button } from "@rneui/base";
 // Firebase
 import { db } from "../../../firebaseConfig";
-import { getDocs, collection } from "firebase/firestore";
+import { getDocs, collection, deleteDoc, doc } from "firebase/firestore";
 // Components
 import { MiniCard } from "../../common/MiniCards/MiniCard";
 import { CardMovement } from "../../common/CardMovement/CardMovement";
@@ -22,12 +22,30 @@ export function HomeScreen({ navigation }) {
 
   const [showMoney, setShowMoney] = useState(true);
   const [movements, setMovements] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [movementToDelete, setMovementToDelete] = useState(null);
+  const [isDeleted, setIsDeleted] = useState(false);
+
+  const handleModal = (movement) => {
+    setModalVisible(true);
+    setMovementToDelete(movement);
+  };
+
+  const confirmDelete = async () => {
+    setIsDeleted(true);
+    setModalVisible(false);
+    setMovements([]);
+
+    await deleteDoc(doc(db, "movements", movementToDelete.id));
+    setMovementToDelete(null);
+  };
 
   let totalAmount = movements.reduce((acc, movement) => {
     return acc + movement.amount;
   }, 0);
 
   useEffect(() => {
+    setIsDeleted(false);
     let movementsCollection = collection(db, "movements");
     getDocs(movementsCollection)
       .then((res) => {
@@ -37,15 +55,15 @@ export function HomeScreen({ navigation }) {
         setMovements(arrayMovements);
       })
       .catch((error) => console.log(error));
-  }, []);
+  }, [isDeleted]);
 
   return (
     <SafeAreaView style={{ ...HomeScreenStyles.containerHome, top: top }}>
+      {/* SALARY */}
       <ScrollView
         style={HomeScreenStyles.scrollViewContainer}
         showsVerticalScrollIndicator={false}
       >
-        {/* SALARY */}
         <View style={HomeScreenStyles.containerAmount}>
           <Text style={HomeScreenStyles.amountTitle}>Salary</Text>
           <View style={HomeScreenStyles.cardMoney}>
@@ -101,7 +119,7 @@ export function HomeScreen({ navigation }) {
           <Button
             title={"New Movement"}
             type="outline"
-            onPress={() => navigation.navigate("NewMovement")}
+            onPress={() => navigation.replace("NewMovement")}
             containerStyle={{
               width: 170,
               backgroundColor: "#00ffa8",
@@ -132,10 +150,59 @@ export function HomeScreen({ navigation }) {
               key={movement.id}
               movement={movement}
               showMoney={showMoney}
+              handleModal={handleModal}
             />
           ))}
         </View>
       </ScrollView>
+      <Modal visible={modalVisible} transparent={true} animationType="fade">
+        <View style={HomeScreenStyles.centeredModal}>
+          <View style={HomeScreenStyles.modalView}>
+            <Text style={HomeScreenStyles.modalText}>
+              Are you sure you want to delete {movementToDelete?.name}?
+            </Text>
+            <View style={{ gap: 15 }}>
+              <Button
+                title={"Delete"}
+                type="outlie"
+                containerStyle={{
+                  width: 170,
+                  backgroundColor: "#161717",
+                  borderRadius: 5,
+                }}
+                titleStyle={{
+                  color: "whitesmoke",
+                }}
+                buttonStyle={{
+                  borderWidth: 1,
+                  borderColor: "#161717",
+                }}
+                onPress={confirmDelete}
+              />
+              <Button
+                title={"Cancel"}
+                type="outlie"
+                containerStyle={{
+                  width: 170,
+                  backgroundColor: "#161717",
+                  borderRadius: 5,
+                }}
+                titleStyle={{
+                  color: "whitesmoke",
+                }}
+                buttonStyle={{
+                  borderWidth: 1,
+                  borderColor: "#161717",
+                }}
+                onPress={() => {
+                  setModalVisible(false);
+                  setMovementToDelete(null);
+                }}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }

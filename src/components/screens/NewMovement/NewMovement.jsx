@@ -1,5 +1,5 @@
 // React
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // React Native
 import { SafeAreaView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -7,6 +7,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button, Input } from "@rneui/base";
 // Styles
 import { NewMovementStyles } from "./styles";
+//Firebase
+import { serverTimestamp, addDoc, collection } from "firebase/firestore";
+import { db } from "../../../firebaseConfig";
 
 export function NewMovement({ navigation }) {
   const { top } = useSafeAreaInsets();
@@ -17,9 +20,30 @@ export function NewMovement({ navigation }) {
     userAvatar: "",
   });
 
+  useEffect(() => {
+    const randomNumber = Math.floor(Math.random() * 1000);
+    const imageUrl = `https://picsum.photos/200/200?random=${randomNumber}`;
+    setMovement({ ...movement, userAvatar: imageUrl });
+  }, []);
+
   const addNewMovement = () => {
-    console.log(movement);
+    const amount =
+      typeMovement === "Income"
+        ? Number(movement.amount)
+        : -Number(movement.amount);
+
+    let newMovement = {
+      ...movement,
+      amount,
+      date: serverTimestamp(),
+    };
+
+    const movementCollection = collection(db, "movements");
+    addDoc(movementCollection, newMovement).then(() => {
+      navigation.navigate("HomeScreen");
+    });
   };
+
   return (
     <SafeAreaView style={{ ...NewMovementStyles.mainContainer, top: top }}>
       <Text style={NewMovementStyles.title}>Add Movement</Text>
@@ -98,7 +122,7 @@ export function NewMovement({ navigation }) {
         <Button
           title={"Go Back"}
           type="outline"
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate("HomeScreen")}
           containerStyle={{
             width: 170,
             backgroundColor: "#00ffa8",

@@ -47,5 +47,24 @@ export const HomeScreenStyles = StyleSheet.create({
         backgroundColor: "#282929",
         borderRadius: 5,
         marginBottom: 50
+    },
+    centeredModal: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    modalView: {
+        backgroundColor: "#00ffa8",
+        borderRadius: 5,
+        padding: 25,
+        alignItems: "center",
+        margin: 20
+    },
+    modalText: {
+        color: "#282929",
+        fontSize: 18,
+        textAlign: "center",
+        marginBottom: 15
     }
 })
