@@ -26,8 +26,8 @@ Make sure to have Node.js, Android Studio and npm installed before running the a
 
 ## Instalación
 ```bash
-git clone https://github.com/ManukBASS/PokedexReactNative.git
-cd PokedexReactNative
+git clone https://github.com/ManukBASS/Bank-Z.git
+cd Bank-Z
 npm install
 npm start
 a (on the Expo menu, allowing connection between the app with your virtual device)
